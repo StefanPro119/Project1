@@ -1,0 +1,10 @@
+{% extends "encyclopedia/layout.html" %}
+
+{%block body%}
+        <h1>{{title_entry}}</h1>
+        <h1>{{entry_variable}}</h1>
+        
+        <button type="button">
+                <a href="{% url 'edit_page' title_entry%}">Edit</a>
+        </button>
+{%endblock body%}
