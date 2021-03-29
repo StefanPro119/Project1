@@ -88,36 +88,63 @@ def create(request):
 
 #prikazivanje edit stranice
 def edit(request, title):
-        text=util.get_entry(title)
-        editt=Edit(initial={'title': title, 'text':text})
-        return render(request, "encyclopedia/edit.html", {
-                'text_edit': editt
-            })
-
-
-
-def submit_edit(request,title):
-    if request.method=="POST":
-        title=util.get_entry(title)
+    if request.method == "POST":
         entries=util.list_entries()
-        form=Edit(initial={'title': title, 'text':text})
-        if form.is_valid(): 
+        form=Edit(request.POST)
+        if form.is_valid():
             title=form.cleaned_data["title"]
             text=form.cleaned_data["text"]
-            entries.append(title)
-            
-            # entries.append(title)
-            # save=util.save_entry(title,text)
-            return render(request, "encyclopedia/error.html", {
-                'text_edit': form,
-                'title':title
-            } )
-
+            for entrie in entries:
+                if title.lower()==entrie.lower():
+                    return render(request, "encyclopedia/error.html")
+            if title.lower() != entrie.lower():
+                save=util.save_entry(title,text)
+                return render(request, "encyclopedia/search.html",{
+                "title": title,
+                "text": text
+                })
 
         else:
-            return render(request, "encyclopedia/index.html", {
-                            "entries": util.list_entries()
-                        })
+            text=util.get_entry(title)
+            form=Edit(initial={'title': title, 'text':text})
+            return render(request, "encyclopedia/edit.html", {
+            'text_edit': form,
+            })
+
+    elif request.method == "GET":
+        text=util.get_entry(title)
+        form=Edit(initial={'title': title, 'text':text})
+        return render(request, "encyclopedia/edit.html", {
+        'text_edit': form,
+        })
+    
+        
+  
+
+
+
+# def submit_edit(request,title):
+#     if request.method=="POST":
+#         title=util.get_entry(title)
+#         entries=util.list_entries()
+#         form=Edit(initial={'title': title, 'text':text})
+#         if form.is_valid(): 
+#             title=form.cleaned_data["title"]
+#             text=form.cleaned_data["text"]
+#             entries.append(title)
+            
+#             # entries.append(title)
+#             # save=util.save_entry(title,text)
+#             return render(request, "encyclopedia/error.html", {
+#                 'text_edit': form,
+#                 'title':title
+#             } )
+
+
+#         else:
+#             return render(request, "encyclopedia/index.html", {
+#                             "entries": util.list_entries()
+#                         })
     
 
 

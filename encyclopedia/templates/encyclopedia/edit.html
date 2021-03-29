@@ -3,14 +3,13 @@
 {% block title %}
     Encyclopedia
 {% endblock %}
-
 {% block body %}
-<h1>{{text_edit}}</h1>
 
-<form action="{% url 'submit_edit' title%}" method="POST">
+<form action="{% url 'edit' text_edit.title%}" method="POST">
     {% csrf_token %}
-    {{submit_edit}}
-<input type="submit">
+    {{text_edit.title}}
+    {{text_edit.text}}
+    <input type="submit">
 </form>
 
 
