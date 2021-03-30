@@ -6,6 +6,7 @@ from django.db.models import Q
 from django import forms
 from . import util
 import re
+import secrets
 
 
 class SearchForm(forms.Form):
@@ -75,7 +76,6 @@ def create(request):
                 return render(request, "encyclopedia/search.html",{
                 "title": title,
                 "text": text
-                # "entries": entries                                    #'entries' je iz def index(request)
                     })
         else: 
             return render(request, "encyclopedia/create.html", {
@@ -118,34 +118,12 @@ def edit(request, title):
         'text_edit': form,
         })
     
-        
-  
 
-
-
-# def submit_edit(request,title):
-#     if request.method=="POST":
-#         title=util.get_entry(title)
-#         entries=util.list_entries()
-#         form=Edit(initial={'title': title, 'text':text})
-#         if form.is_valid(): 
-#             title=form.cleaned_data["title"]
-#             text=form.cleaned_data["text"]
-#             entries.append(title)
-            
-#             # entries.append(title)
-#             # save=util.save_entry(title,text)
-#             return render(request, "encyclopedia/error.html", {
-#                 'text_edit': form,
-#                 'title':title
-#             } )
-
-
-#         else:
-#             return render(request, "encyclopedia/index.html", {
-#                             "entries": util.list_entries()
-#                         })
-    
-
-
-
+def random_page(request):
+    entries=util.list_entries()
+    title=secrets.choice(entries)
+    title_entry=util.get_entry(title)
+    return render(request, "encyclopedia/entry.html", {
+        "title_entry": title,
+        "entry_variable": title_entry
+    })

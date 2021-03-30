@@ -8,13 +8,9 @@
 {{ title }}
 <form action="{% url 'create' %}" method="POST">
     {% csrf_token %}
-<div class="djo">
-    <h5>
-        {{form.title}}
-        <input type="submit">
-    </h5></div>
-    
-    <h4 style="width: 80%;  height: 20px; position: absolute;">{{form.text}}</h4>
-    
+        <h5>{{form.title}}
+            <input type="submit">
+        </h5>
+        <h5 style="width: 80%;  height: 20px; position: absolute;">{{form.text}}</h5>
 </form> 
 {% endblock %}  
