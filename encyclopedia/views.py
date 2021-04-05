@@ -36,28 +36,69 @@ def entry(request, title):
             "entry_variable": entry_variable
         })
 
+    
 def search(request):
-    if request.method=="POST":
+    if request.method == "GET":
         empty_list=[]
-        posts=util.list_entries()
-        query=request.POST.get('q') #sa ovim kreiramo varijablu "query" da uzmemo sta smo napisali u search
-        form=SearchForm(request.POST)
-        if form.is_valid():
-            queries=form.cleaned_data["queries"]
-        for post in posts:          # kreiramo for loop "post" zato sto za listu "posts" ne mozemo da definisemo lower slova, pa ih moramo svaki razdovik
-            if query.lower() == post.lower():
-                query=util.get_entry(query)
-                return render(request, "encyclopedia/search.html", {
-                "query": query
-                })
-            if query.lower() in post.lower():   # parcijalno trazenje odnosno ukoliko ukucamo samo dva slova treba da izadje predlozena pretraga koja se mathcuje
-                empty_list.append(post)
-                return render(request, "encyclopedia/search.html", {
-                "results": empty_list,
-                "post":post
-            })
-        else:
-            return render(request, "encyclopedia/error.html")
+        query=request.GET.get('q')
+        queries=util.list_entries()
+        for x in queries:
+            print(x)
+            if query.lower() == x.lower():
+                y=util.get_entry(x)
+                return render(request, "encyclopedia/entry.html", {
+                        "title_entry": query,
+                        "entry_variable": y
+                        })
+            if query.lower() in x.lower():
+                # query=x
+                # print(query)
+                print(x)
+                empty_list.append(x)
+                print(empty_list)
+                continue
+
+                # print(empty_list)
+                # return render(request, "encyclopedia/search.html", {
+                #         "results": empty_list,
+                #         "title_entry": x,
+                #         })
+
+        return render(request, "encyclopedia/search.html", {
+                        "results": empty_list,
+                        "title_entry": x,
+                        })
+
+    return HttpResponse("dsddsfd")
+        # python manage.py runserver
+
+# def searchc(request):
+    # if request.method=="GET":
+    #     empty_list=[]
+    #     posts=util.list_entries()
+    #     query=request.POST.get('q') #sa ovim kreiramo varijablu "query" da uzmemo sta smo napisali u search
+        # form=SearchForm(request.POST)
+        # if form.is_valid():
+        #     queries=form.cleaned_data["queries"]
+        # if query: #moramo staviti kroz if methodu zato sto nam ne priznaje .lower(), jer ako se ne ubaci nista vratice nam None gresku
+        #     for post in posts:         
+        #         if query.lower() == post.lower(): # kreiramo for loop "post" zato sto za listu "posts" ne mozemo da definisemo lower slova, pa ih moramo svaki razdovik
+        #             queries=util.get_entry(query)
+        #             return render(request, "encyclopedia/entry.html", {
+        #             "title_entry": query,
+        #             "entry_variable": queries
+        #             })
+                # elif query.lower() in post.lower():   # parcijalno trazenje odnosno ukoliko ukucamo samo dva slova treba da izadje predlozena pretraga koja se mathcuje
+                #     empty_list.append(post)
+                #     return render(request, "encyclopedia/search.html", {
+                #     "results": empty_list,
+                #     "post":post
+                #     })
+            # else:
+            #     return render(request, "encyclopedia/error.html")
+
+        # return HttpResponse("dsddsfd")
+    # return render(request, "encyclopedia/error.html")
 
 
 def create(request):
@@ -99,9 +140,9 @@ def edit(request, title):
                     return render(request, "encyclopedia/error.html")
             if title.lower() != entrie.lower():
                 save=util.save_entry(title,text)
-                return render(request, "encyclopedia/search.html",{
-                "title": title,
-                "text": text
+                return render(request, "encyclopedia/entry.html",{
+                "title_entry": title,
+                "entry_variable": text
                 })
 
         else:
