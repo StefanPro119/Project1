@@ -9,9 +9,6 @@ import re
 import secrets
 
 
-class SearchForm(forms.Form):
-    queries = forms.CharField(label="")
-
 class CreateForm(forms.Form):
     title=forms.CharField(label="")
     text=forms.CharField(widget=forms.Textarea(attrs={'rows':3 , 'placeholder':"Content"}))
@@ -43,63 +40,29 @@ def search(request):
         query=request.GET.get('q')
         queries=util.list_entries()
         for x in queries:
+            entry_variable=util.get_entry(x)
             print(x)
             if query.lower() == x.lower():
-                y=util.get_entry(x)
+                entry_variable=util.get_entry(x)
                 return render(request, "encyclopedia/entry.html", {
                         "title_entry": query,
-                        "entry_variable": y
+                        "entry_variable": entry_variable
                         })
+
             if query.lower() in x.lower():
-                # query=x
-                # print(query)
-                print(x)
+                entry_variable=util.get_entry(x)
                 empty_list.append(x)
-                print(empty_list)
-                continue
+                # continue
 
-                # print(empty_list)
-                # return render(request, "encyclopedia/search.html", {
-                #         "results": empty_list,
-                #         "title_entry": x,
-                #         })
-
-        return render(request, "encyclopedia/search.html", {
+                return render(request, "encyclopedia/search.html", {
                         "results": empty_list,
                         "title_entry": x,
+                        "entry_variable": entry_variable
                         })
 
-    return HttpResponse("dsddsfd")
-        # python manage.py runserver
-
-# def searchc(request):
-    # if request.method=="GET":
-    #     empty_list=[]
-    #     posts=util.list_entries()
-    #     query=request.POST.get('q') #sa ovim kreiramo varijablu "query" da uzmemo sta smo napisali u search
-        # form=SearchForm(request.POST)
-        # if form.is_valid():
-        #     queries=form.cleaned_data["queries"]
-        # if query: #moramo staviti kroz if methodu zato sto nam ne priznaje .lower(), jer ako se ne ubaci nista vratice nam None gresku
-        #     for post in posts:         
-        #         if query.lower() == post.lower(): # kreiramo for loop "post" zato sto za listu "posts" ne mozemo da definisemo lower slova, pa ih moramo svaki razdovik
-        #             queries=util.get_entry(query)
-        #             return render(request, "encyclopedia/entry.html", {
-        #             "title_entry": query,
-        #             "entry_variable": queries
-        #             })
-                # elif query.lower() in post.lower():   # parcijalno trazenje odnosno ukoliko ukucamo samo dva slova treba da izadje predlozena pretraga koja se mathcuje
-                #     empty_list.append(post)
-                #     return render(request, "encyclopedia/search.html", {
-                #     "results": empty_list,
-                #     "post":post
-                #     })
-            # else:
-            #     return render(request, "encyclopedia/error.html")
-
-        # return HttpResponse("dsddsfd")
-    # return render(request, "encyclopedia/error.html")
-
+        return render(request, "encyclopedia/index.html", {
+        "entries": util.list_entries()
+    })
 
 def create(request):
     if request.method=="POST":
@@ -126,8 +89,6 @@ def create(request):
         "form": CreateForm()
     })
 
-
-#prikazivanje edit stranice
 def edit(request, title):
     if request.method == "POST":
         entries=util.list_entries()

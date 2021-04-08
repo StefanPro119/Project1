@@ -9,7 +9,7 @@
 
 <ul>
     {% for result in results %}
-        <li><a href="{% url 'entry' title_entry%}">{{ result }}</a></li>                    <!-- 'entry' je html stranica (path=...name='entry') *TRUE, a title_entry je definisan u views.py u def entry, kao argument za html stranicu -->
+        <li><a href="{% url 'entry' title_entry%}">{{ result }}</a></li>                    <!-- 'entry' je html stranica (path=...name='entry') , a title_entry je definisan u views.py u def entry, kao argument za html stranicu pozvan iz def search -->
     {% endfor %}
 </ul>
 {% endblock %}
